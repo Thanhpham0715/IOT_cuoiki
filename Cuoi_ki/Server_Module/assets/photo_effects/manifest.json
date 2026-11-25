@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "original",
+      "name": "Tự nhiên",
+      "type": "builtin"
+    },
+    {
+      "id": "gray",
+      "name": "Đen trắng",
+      "type": "builtin"
+    },
+    {
+      "id": "sepia",
+      "name": "Hoài cổ",
+      "type": "builtin"
+    },
+    {
+      "id": "warm",
+      "name": "Tông ấm",
+      "type": "builtin"
+    },
+    {
+      "id": "negative",
+      "name": "Âm bản",
+      "type": "builtin"
+    },
+    {
+      "id": "cartoon",
+      "name": "Hoạt hình",
+      "type": "builtin"
+    },
+    {
+      "id": "pixel",
+      "name": "Pixel 8-bit",
+      "type": "builtin"
+    }
+  ],
+  "face_overlays": [
+    {
+      "id": "glasses",
+      "name": "Kính râm Aviator",
+      "overlay": "face_overlays/glasses/overlay.png",
+      "metadata": "face_overlays/glasses/metadata.json"
+    },
+    {
+      "id": "crown",
+      "name": "Vương miện vàng",
+      "overlay": "face_overlays/crown/overlay.png",
+      "metadata": "face_overlays/crown/metadata.json"
+    },
+    {
+      "id": "cat_ears",
+      "name": "Tai mèo dễ thương",
+      "overlay": "face_overlays/cat_ears/overlay.png",
+      "metadata": "face_overlays/cat_ears/metadata.json"
+    },
+    {
+      "id": "halo",
+      "name": "Vòng hào quang",
+      "overlay": "face_overlays/halo/overlay.png",
+      "metadata": "face_overlays/halo/metadata.json"
+    }
+  ],
+  "frames": [
+    {
+      "id": "classic_strip_4",
+      "name": "Dải dọc Cổ điển (1x4)",
+      "file": "frames/classic_strip_4.png",
+      "canvas_size": [
+        600,
+        1800
+      ],
+      "slots": [
+        [
+          40,
+          45,
+          520,
+          350
+        ],
+        [
+          40,
+          425,
+          520,
+          350
+        ],
+        [
+          40,
+          805,
+          520,
+          350
+        ],
+        [
+          40,
+          1185,
+          520,
+          350
+        ]
+      ],
+      "qr_slot": [
+        430,
+        1585,
+        130,
+        130
+      ]
+    },
+    {
+      "id": "pastel_pink_strip_4",
+      "name": "Dải dọc Hồng Pastel (1x4)",
+      "file": "frames/pastel_pink_strip_4.png",
+      "canvas_size": [
+        600,
+        1800
+      ],
+      "slots": [
+        [
+          40,
+          45,
+          520,
+          350
+        ],
+        [
+          40,
+          425,
+          520,
+          350
+        ],
+        [
+          40,
+          805,
+          520,
+          350
+        ],
+        [
+          40,
+          1185,
+          520,
+          350
+        ]
+      ],
+      "qr_slot": [
+        430,
+        1585,
+        130,
+        130
+      ]
+    },
+    {
+      "id": "grid_2x2_retro",
+      "name": "Khung lưới Studio (2x2)",
+      "file": "frames/grid_2x2_retro.png",
+      "canvas_size": [
+        1200,
+        1600
+      ],
+      "slots": [
+        [
+          60,
+          70,
+          520,
+          620
+        ],
+        [
+          620,
+          70,
+          520,
+          620
+        ],
+        [
+          60,
+          730,
+          520,
+          620
+        ],
+        [
+          620,
+          730,
+          520,
+          620
+        ]
+      ],
+      "qr_slot": [
+        1005,
+        1395,
+        135,
+        135
+      ]
+    }
+  ]
+}

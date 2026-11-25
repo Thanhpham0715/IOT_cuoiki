@@ -1,0 +1,15 @@
+{
+  "id": "cat_ears",
+  "name": "Tai mèo dễ thương",
+  "anchor": "forehead",
+  "width_ratio": 1.35,
+  "pivot": [
+    0.5,
+    0.85
+  ],
+  "offset": [
+    0.0,
+    -0.05
+  ],
+  "angle_offset": 0.0
+}

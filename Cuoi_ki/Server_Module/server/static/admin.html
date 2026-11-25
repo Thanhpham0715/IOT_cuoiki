@@ -1,0 +1,1344 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Photobooth Admin</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: #eef2ff;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: radial-gradient(ellipse at 12% 0%, #172554 0, #0b1020 48%); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { max-width: 1280px; margin: 0 auto; padding: 28px 24px 48px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 26px; }
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: linear-gradient(135deg, #5eead4, #38bdf8); color: #082f49; font-weight: 900; }
+    h1 { margin: 0; font-size: 21px; letter-spacing: -.03em; }
+    .subtitle { margin-top: 4px; color: #91a0bd; font-size: 13px; }
+    a { color: #67e8f9; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .toolbar, .card { border: 1px solid #25304a; background: rgba(15, 23, 42, .84); border-radius: 17px; box-shadow: 0 16px 40px rgba(0, 0, 0, .16); }
+    .toolbar { padding: 16px; display: grid; grid-template-columns: minmax(140px, .7fr) minmax(200px, 1fr) auto auto; gap: 12px; align-items: end; margin-bottom: 18px; }
+    label { display: block; color: #9aa8c3; font-size: 12px; margin-bottom: 7px; }
+    input[type="text"], input[type="password"] { width: 100%; color: #e2e8f0; border: 1px solid #34415d; background: #0b1326; border-radius: 10px; padding: 10px 12px; outline: none; }
+    select { width: 100%; color: #e2e8f0; border: 1px solid #34415d; background: #0b1326; border-radius: 10px; padding: 10px 12px; outline: none; }
+    input:focus { border-color: #22d3ee; box-shadow: 0 0 0 3px rgba(34, 211, 238, .12); }
+    button { border: 0; border-radius: 10px; padding: 10px 15px; color: #071321; font-weight: 750; background: #67e8f9; transition: .15s ease; }
+    button:hover:not(:disabled) { background: #a5f3fc; transform: translateY(-1px); }
+    button.secondary { color: #dce8f8; background: #293650; }
+    button.secondary:hover:not(:disabled) { background: #394968; }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+    .connection { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 115px; padding-bottom: 10px; color: #a9b5cb; font-size: 13px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; box-shadow: 0 0 0 4px rgba(100, 116, 139, .12); }
+    .dot.good { background: #34d399; box-shadow: 0 0 0 4px rgba(52, 211, 153, .12); }
+    .dot.bad { background: #fb7185; box-shadow: 0 0 0 4px rgba(251, 113, 133, .12); }
+    .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 18px; }
+    .metric { padding: 17px 18px; }
+    .metric-title { color: #91a0bd; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .metric-value { margin-top: 9px; font-size: 18px; font-weight: 750; }
+    .metric-note { margin-top: 4px; color: #7787a7; font-size: 12px; }
+    .main-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, .8fr); gap: 18px; align-items: start; }
+    .card { padding: 21px; }
+    .card h2 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .muted { color: #91a0bd; font-size: 13px; }
+    .status-pill { white-space: nowrap; padding: 6px 10px; border: 1px solid #35435e; border-radius: 999px; color: #b7c3d9; font-size: 12px; }
+    .status-pill.good { border-color: #146c56; color: #6ee7b7; background: rgba(16, 185, 129, .08); }
+    .status-pill.warn { border-color: #815d22; color: #fcd34d; background: rgba(245, 158, 11, .08); }
+    .status-pill.bad { border-color: #87354c; color: #fda4af; background: rgba(244, 63, 94, .08); }
+    .score-row { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin: 28px 0 10px; }
+    .score { font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -.06em; }
+    .score small { color: #8190ac; font-size: 18px; font-weight: 600; letter-spacing: 0; }
+    .ready { color: #94a3b8; font-size: 13px; }
+    .progress { height: 9px; overflow: hidden; border-radius: 10px; background: #26324a; }
+    .progress > span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #22d3ee, #34d399); transition: width .25s ease; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 17px; }
+    .stat { border-radius: 11px; padding: 12px; background: #111b30; }
+    .stat strong { display: block; font-size: 17px; }
+    .stat span { display: block; margin-top: 4px; color: #8493af; font-size: 11px; }
+    .section-label { margin: 23px 0 9px; color: #91a0bd; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .feedback, .keypoints, .gestures { display: grid; gap: 7px; }
+    .feedback-item { padding: 10px 12px; border-radius: 9px; background: #111b30; color: #cbd5e1; font-size: 13px; }
+    .feedback-item strong { color: #67e8f9; margin-right: 7px; }
+    .empty { color: #7f8da7; font-size: 13px; }
+    details { margin-top: 15px; }
+    summary { cursor: pointer; color: #9fb0ca; font-size: 13px; }
+    .keypoints { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 10px; }
+    .point { display: flex; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 8px; background: #111b30; color: #aebbd0; font-size: 11px; }
+    .point span:last-child { color: #67e8f9; font-variant-numeric: tabular-nums; }
+    .control { margin-top: 20px; padding-top: 18px; border-top: 1px solid #26324a; }
+    .control:first-of-type { margin-top: 18px; }
+    .control-title { margin-bottom: 12px; font-size: 14px; font-weight: 700; }
+    .slider-row { display: grid; grid-template-columns: 1fr 54px; gap: 12px; align-items: center; }
+    input[type="range"] { width: 100%; accent-color: #22d3ee; }
+    output { color: #67e8f9; font-weight: 750; text-align: right; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+    .action-message { min-height: 20px; margin-top: 10px; color: #9aa8c3; font-size: 12px; overflow-wrap: anywhere; }
+    .sequence-progress { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; margin-top: 12px; }
+    .sequence-shot { padding: 9px; border: 1px solid #293650; border-radius: 9px; background: #111b30; color: #8493af; font-size: 12px; text-align: center; }
+    .sequence-shot.good { border-color: #146c56; color: #6ee7b7; }
+    .sequence-shot.warn { border-color: #815d22; color: #fcd34d; }
+    .sequence-shot.bad { border-color: #87354c; color: #fda4af; }
+    .notice { margin-top: 15px; border-radius: 10px; padding: 11px 12px; color: #fcd34d; background: rgba(245, 158, 11, .08); border: 1px solid rgba(245, 158, 11, .18); font-size: 12px; line-height: 1.5; }
+    .camera-card, .history-card, .guide-card { margin-bottom: 18px; }
+    .gallery-card { margin: 18px 0; }
+    .review-actions { margin-top: 15px; padding: 14px; border: 1px solid #35435e; border-radius: 11px; background: #111b30; }
+    .review-message { color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+    .photo-layout { margin-top: 18px; padding: 16px; border: 1px solid #35435e; border-radius: 12px; background: #111b30; }
+    .layout-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+    .layout-frame-row { display: grid; grid-template-columns: minmax(200px, 1fr) minmax(120px, 190px); gap: 14px; align-items: center; margin-top: 14px; }
+    .layout-frame-preview { display: block; width: 100%; max-height: 220px; object-fit: contain; border: 1px solid #293650; border-radius: 9px; background: #050914; }
+    .layout-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .layout-slot { min-width: 0; padding: 12px; border: 1px solid #293650; border-radius: 10px; background: #0b1326; }
+    .layout-slot h3 { margin: 0 0 10px; color: #67e8f9; font-size: 13px; }
+    .layout-slot label { margin-top: 9px; }
+    .layout-preview { display: block; max-width: min(100%, 520px); max-height: 720px; margin: 16px auto 0; border: 1px solid #35435e; border-radius: 10px; background: #050914; }
+    .photo-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-top: 15px; }
+    .photo-card { min-width: 0; overflow: hidden; border: 1px solid #293650; border-radius: 11px; background: #0b1326; }
+    .photo-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #050914; }
+    .photo-card-info { padding: 10px; color: #aebbd0; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+    .photo-card-info strong { display: block; color: #67e8f9; font-size: 12px; }
+    .raw-download { margin-top: 8px; padding: 6px 9px; font-size: 11px; }
+    .camera-view { position: relative; display: grid; place-items: center; margin-top: 15px; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid #293650; border-radius: 12px; background: #050914; }
+    .camera-view img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .camera-view canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .camera-placeholder { position: absolute; color: #71809c; font-size: 14px; }
+    .live-badge { position: absolute; top: 12px; left: 12px; display: flex; align-items: center; gap: 7px; padding: 6px 9px; border-radius: 7px; background: rgba(5, 9, 20, .78); color: #dbeafe; font-size: 11px; font-weight: 750; letter-spacing: .08em; }
+    .live-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fb7185; }
+    .live-badge.active::before { background: #34d399; box-shadow: 0 0 8px #34d399; }
+    .video-caption { position: absolute; right: 12px; bottom: 12px; max-width: calc(100% - 24px); padding: 8px 11px; border: 1px solid rgba(103, 232, 249, .24); border-radius: 9px; background: rgba(5, 9, 20, .82); color: #e2e8f0; font-size: 12px; font-weight: 700; text-align: right; }
+    .table-wrap { overflow-x: auto; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+    th { padding: 9px 10px; color: #8493af; font-weight: 600; border-bottom: 1px solid #293650; }
+    td { padding: 10px; color: #cbd5e1; border-bottom: 1px solid rgba(41, 54, 80, .62); white-space: nowrap; }
+    .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
+    .guide-item { padding: 13px; border-radius: 10px; background: #111b30; color: #bdc9dc; font-size: 12px; line-height: 1.55; }
+    .guide-item strong { display: block; margin-bottom: 5px; color: #67e8f9; font-size: 13px; }
+    footer { margin-top: 20px; color: #65738d; font-size: 11px; text-align: center; }
+    @media (max-width: 820px) { .metrics { grid-template-columns: repeat(3, 1fr); } .main-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 620px) { .shell { padding: 18px 13px 32px; } header { align-items: flex-start; } .toolbar { grid-template-columns: 1fr 1fr; } .connection { justify-content: flex-start; } .metrics { grid-template-columns: repeat(2, 1fr); gap: 9px; } .metric { padding: 14px; } .metric-value { font-size: 16px; } .card { padding: 17px; } .guide-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 420px) { .sequence-progress { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px) { .layout-slots { grid-template-columns: 1fr; } .layout-frame-row { grid-template-columns: 1fr; } .layout-frame-preview { max-height: 180px; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">PB</div>
+        <div>
+          <h1>Photobooth Admin</h1>
+          <div class="subtitle">Giám sát AI và điều khiển Raspberry Pi</div>
+        </div>
+      </div>
+      <a href="/docs" target="_blank" rel="noreferrer">API docs ↗</a>
+    </header>
+
+    <section class="toolbar">
+      <div>
+        <label for="deviceId">Device ID</label>
+        <input id="deviceId" type="text" value="pi01" autocomplete="off">
+      </div>
+      <div>
+        <label for="token">API token (nếu đã cấu hình)</label>
+        <input id="token" type="password" placeholder="Để trống nếu không dùng token" autocomplete="off">
+      </div>
+      <button id="connectButton">Kết nối</button>
+      <div class="connection"><span id="connectionDot" class="dot"></span><span id="connectionText">Chưa kết nối</span></div>
+    </section>
+
+    <section class="metrics">
+      <article class="card metric">
+        <div class="metric-title">Server</div>
+        <div id="serverStatus" class="metric-value">—</div>
+        <div id="serverUptime" class="metric-note">Đang chờ dữ liệu</div>
+      </article>
+      <article class="card metric">
+        <div class="metric-title">AI model</div>
+        <div id="aiStatus" class="metric-value">—</div>
+        <div class="metric-note">Trạng thái bộ phân tích</div>
+      </article>
+      <article class="card metric">
+        <div class="metric-title">MQTT broker</div>
+        <div id="mqttStatus" class="metric-value">—</div>
+        <div class="metric-note">Kết nối của Server tới broker</div>
+      </article>
+      <article class="card metric">
+        <div class="metric-title">Thiết bị online</div>
+        <div id="deviceCount" class="metric-value">—</div>
+        <div id="deviceNote" class="metric-note">Trạng thái MQTT</div>
+      </article>
+      <article class="card metric">
+        <div class="metric-title">FPS nhận diện</div>
+        <div id="fpsValue" class="metric-value">—</div>
+        <div id="fpsNote" class="metric-note">Frame Server xử lý mỗi giây</div>
+      </article>
+    </section>
+
+    <section class="card camera-card">
+      <div class="card-head">
+        <div>
+          <h2>Camera Pi</h2>
+          <div class="muted" style="margin-top:6px">Frame mới nhất nhận từ Pi</div>
+        </div>
+        <span id="cameraBadge" class="live-badge">WAITING</span>
+      </div>
+      <div class="camera-view">
+        <img id="cameraImage" alt="Khung hình camera Raspberry Pi" hidden>
+        <canvas id="poseOverlay" aria-hidden="true"></canvas>
+        <div id="cameraPlaceholder" class="camera-placeholder">Đang chờ frame từ Pi…</div>
+        <div id="videoCaption" class="video-caption">Đang chờ kết quả nhận diện…</div>
+      </div>
+    </section>
+
+    <main class="main-grid">
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Kết quả nhận diện trực tiếp</h2>
+            <div id="frameInfo" class="muted" style="margin-top:6px">Chưa nhận frame</div>
+          </div>
+          <span id="poseStatus" class="status-pill">Đang chờ Pi</span>
+        </div>
+
+        <div class="score-row">
+          <div><div id="poseScore" class="score">—<small>%</small></div><div class="muted" style="margin-top:6px">Độ tin cậy gesture</div></div>
+          <div id="readyState" class="ready">Chưa sẵn sàng chụp</div>
+        </div>
+        <div class="progress"><span id="scoreBar"></span></div>
+
+        <div class="stats">
+          <div class="stat"><strong id="keypointCount">—</strong><span>Gesture được chọn</span></div>
+          <div class="stat"><strong id="handCount">—</strong><span>Bàn tay</span></div>
+          <div class="stat"><strong id="processingTime">—</strong><span>Thời gian AI (ms)</span></div>
+        </div>
+
+        <div class="section-label">Trạng thái điều khiển</div>
+        <div id="feedback" class="feedback"><div class="empty">Chưa có kết quả.</div></div>
+        <div class="section-label">Gesture</div>
+        <div id="gestures" class="gestures"><div class="empty">Chưa có dữ liệu.</div></div>
+        <details>
+          <summary id="keypointSummary">Chi tiết landmarks bàn tay</summary>
+          <div id="keypoints" class="keypoints"></div>
+        </details>
+        <div id="templateNotice" class="notice" hidden></div>
+      </section>
+
+      <aside class="card">
+        <div class="card-head">
+          <div>
+            <h2>Điều khiển thiết bị</h2>
+            <div id="sessionInfo" class="muted" style="margin-top:6px">Chưa có session hoạt động</div>
+          </div>
+          <span id="sessionStatus" class="status-pill">—</span>
+        </div>
+
+        <div class="control">
+          <div class="control-title">Độ sáng LED</div>
+          <div class="slider-row">
+            <input id="brightness" type="range" min="0" max="100" step="1" value="50">
+            <output id="brightnessValue">50%</output>
+          </div>
+          <div class="button-row"><button id="ledButton">Gửi lệnh LED</button></div>
+          <div id="ledMessage" class="action-message" aria-live="polite"></div>
+        </div>
+
+        <div class="control">
+          <div class="control-title">Chụp ảnh</div>
+          <div class="muted">Gửi lệnh chụp tới Pi trong session hiện tại.</div>
+          <div class="button-row"><button id="captureButton" class="secondary" disabled>Yêu cầu chụp</button></div>
+          <div id="captureMessage" class="action-message" aria-live="polite"></div>
+        </div>
+
+        <div class="control">
+          <div class="card-head">
+            <div>
+              <div id="sequenceTitle" class="control-title">Chụp liên hoàn 8 ảnh</div>
+              <div id="sequenceDescription" class="muted">Server đếm ngược 10 giây trước mỗi ảnh và lưu ảnh gốc riêng.</div>
+            </div>
+            <span id="sequenceStatus" class="status-pill">Chưa chạy</span>
+          </div>
+          <div class="button-row">
+            <button id="sequenceStartButton" disabled>Bắt đầu chụp bộ ảnh</button>
+            <button id="sequenceCancelButton" class="secondary" disabled>Hủy bộ chụp</button>
+          </div>
+          <div id="sequenceMessage" class="action-message" aria-live="polite"></div>
+          <div id="sequenceProgress" class="sequence-progress" aria-label="Tiến độ chụp"></div>
+        </div>
+
+        <div class="control">
+          <div class="control-title">Sticker khuôn mặt</div>
+          <label for="faceOverlaySelect">Overlay cho ảnh chụp</label>
+          <select id="faceOverlaySelect" disabled>
+            <option value="">Không dùng overlay</option>
+          </select>
+          <div id="faceOverlayMessage" class="action-message" aria-live="polite"></div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="card gallery-card">
+      <div class="card-head">
+        <div>
+          <h2 id="galleryTitle">Ảnh chụp trong session</h2>
+          <div id="galleryStatus" class="muted" style="margin-top:6px">Chưa có ảnh trong session.</div>
+        </div>
+      </div>
+      <div id="reviewActions" class="review-actions" hidden>
+        <div id="reviewMessage" class="review-message"></div>
+        <div id="reviewButtons" class="button-row">
+          <button id="retakeButton" class="secondary">Chụp lại cả bộ (tối đa 1 lần)</button>
+          <button id="continueReviewButton">Chốt bộ ảnh và tiếp tục</button>
+        </div>
+      </div>
+      <div id="photoLayoutSection" class="photo-layout" hidden>
+        <div class="layout-header">
+          <div>
+            <h2>Chọn khung, ảnh và hiệu ứng</h2>
+            <div class="muted" style="margin-top:6px">Chọn khung 4 ô, xếp 4 ảnh theo thứ tự, rồi tùy chỉnh riêng filter và sticker cho từng ô.</div>
+          </div>
+        </div>
+        <div class="layout-frame-row">
+          <div>
+            <label for="layoutFrameSelect">Mẫu khung</label>
+            <select id="layoutFrameSelect"></select>
+            <div id="layoutMessage" class="action-message" aria-live="polite"></div>
+          </div>
+          <img id="layoutFramePreview" class="layout-frame-preview" alt="Mẫu khung đang chọn">
+        </div>
+        <div id="photoLayoutSlots" class="layout-slots"></div>
+        <div class="button-row">
+          <button id="savePhotoLayoutButton">Lưu lựa chọn và tạo xem trước</button>
+        </div>
+        <img id="photoLayoutPreview" class="layout-preview" alt="Ảnh ghép xem trước" hidden>
+      </div>
+      <div id="photoGallery" class="photo-gallery"></div>
+    </section>
+
+    <section class="card history-card">
+      <div class="card-head">
+        <div>
+          <h2>Lịch sử nhận diện gần đây</h2>
+          <div class="muted" style="margin-top:6px">Hiển thị 12 kết quả mới nhất; Server giữ tối đa 50 kết quả trong bộ nhớ đến khi khởi động lại</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Thời gian</th><th>Frame</th><th>Trạng thái</th><th>Confidence</th><th>Gesture</th><th>Filter / zoom</th><th>Hành động</th></tr></thead>
+          <tbody id="historyRows"><tr><td colspan="7" class="empty">Chưa có kết quả.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card guide-card">
+      <h2>Hướng dẫn sử dụng</h2>
+      <div class="guide-grid">
+        <div class="guide-item"><strong>1 · Bật hệ thống</strong>Khởi động Server, MQTT broker và chạy <code>python -m pi.main</code> trên Pi. Nhập Device ID, thường là <code>pi01</code>, rồi bấm Kết nối.</div>
+        <div class="guide-item"><strong>2 · Bật điều khiển tay</strong>Đưa một bàn tay rõ vào khung hình và giữ lòng bàn tay mở vài nhịp đến khi trạng thái chuyển sang “Sẵn sàng”.</div>
+        <div class="guide-item"><strong>3 · Điều khiển bằng gesture</strong>👍 giữ ngón cái để chụp sau đếm ngược; ✌ chuyển filter kế; ☝ chuyển filter trước; nắm tay hủy đếm ngược. Pinch bằng ngón cái–trỏ để zoom.</div>
+      </div>
+      <div class="notice">Giữ mỗi gesture khoảng 4 frame; confidence cần đạt 60%. Sau lệnh, thả tay ra rồi mới lặp lại. Nút web “Yêu cầu chụp” và nút vật lý (nếu đã nối) vẫn có thể chụp thủ công.</div>
+    </section>
+    <footer>Dữ liệu được làm mới định kỳ từ Server · Không cần cài thêm frontend package</footer>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const stateLabels = {
+      inactive: ["Chưa bật điều khiển", ""],
+      ready: ["Sẵn sàng", "good"],
+      countdown: ["Đang đếm ngược", "warn"],
+      capturing: ["Đang chụp", "warn"],
+    };
+    const gestureNames = {
+      Open_Palm: "Bàn tay mở",
+      Thumb_Up: "Giơ ngón cái",
+      Victory: "Chữ V",
+      Pointing_Up: "Giơ ngón trỏ",
+      Closed_Fist: "Nắm tay",
+      None: "Chưa xác định",
+    };
+    const handConnections = [
+      [0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8],
+      [5, 9], [9, 10], [10, 11], [11, 12], [9, 13], [13, 14], [14, 15],
+      [15, 16], [13, 17], [17, 18], [18, 19], [19, 20], [0, 17],
+    ];
+    let token = "";
+    let deviceId = "pi01";
+    let pollTimer = null;
+    let refreshing = false;
+    let currentSession = null;
+    let currentReview = null;
+    let currentFrameUrl = null;
+    let currentFrameKey = null;
+    let lastRenderedResultKey = null;
+    let latestGestureResult = null;
+    let recentFrameTimes = [];
+    let faceOverlayCatalogKey = "";
+    let faceOverlayUpdating = false;
+    let gallerySessionId = null;
+    let lastGalleryRefresh = 0;
+    let galleryRefreshing = false;
+    let sequenceRequesting = false;
+    let reviewRequesting = false;
+    let latestAdminData = null;
+    let photoLayoutEditorKey = "";
+    let photoLayoutRequesting = false;
+    let framePreviewObjectUrl = null;
+    let photoLayoutPreviewObjectUrl = null;
+    const photoObjectUrls = new Map();
+
+    function setConnection(text, state) {
+      $("connectionText").textContent = text;
+      $("connectionDot").className = `dot ${state || ""}`;
+    }
+
+    function setPill(element, text, state) {
+      element.textContent = text;
+      element.className = `status-pill ${state || ""}`;
+    }
+
+    function addText(parent, className, text) {
+      const item = document.createElement("div");
+      item.className = className;
+      item.textContent = text;
+      parent.appendChild(item);
+      return item;
+    }
+
+    async function api(path, options = {}) {
+      const headers = new Headers(options.headers || {});
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+      if (options.body) headers.set("Content-Type", "application/json");
+      const response = await fetch(path, { ...options, headers, cache: "no-store" });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(body.detail || `HTTP ${response.status}`);
+      return body;
+    }
+
+    async function updateCameraFrame(result) {
+      const frameKey = result ? `${result.session_id}:${result.frame_id}` : null;
+      if (frameKey && frameKey === currentFrameKey) return;
+      const headers = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const query = new URLSearchParams({ t: String(Date.now()) });
+      if (result) query.set("frame_id", String(result.frame_id));
+      const path = `/api/v1/admin/frame/${encodeURIComponent(deviceId)}?${query}`;
+      const response = await fetch(path, { headers, cache: "no-store" });
+      if (response.status === 404) {
+        currentFrameKey = null;
+        $("cameraImage").hidden = true;
+        $("cameraPlaceholder").hidden = false;
+        $("cameraPlaceholder").textContent = "Đang chờ frame từ Pi…";
+        $("cameraBadge").classList.remove("active");
+        $("cameraBadge").textContent = "WAITING";
+        drawHandOverlay(null);
+        return;
+      }
+      if (!response.ok) throw new Error(`Không tải được frame camera: HTTP ${response.status}`);
+      const nextUrl = URL.createObjectURL(await response.blob());
+      const previousUrl = currentFrameUrl;
+      currentFrameUrl = nextUrl;
+      currentFrameKey = frameKey;
+      const image = $("cameraImage");
+      image.onload = () => {
+        if (previousUrl) URL.revokeObjectURL(previousUrl);
+        drawHandOverlay(latestGestureResult);
+      };
+      image.src = nextUrl;
+      image.hidden = false;
+      $("cameraPlaceholder").hidden = true;
+      $("cameraBadge").classList.add("active");
+      $("cameraBadge").textContent = "LIVE";
+    }
+
+    function drawHandOverlay(result) {
+      const canvas = $("poseOverlay");
+      const image = $("cameraImage");
+      const bounds = canvas.parentElement.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.round(bounds.width * ratio));
+      canvas.height = Math.max(1, Math.round(bounds.height * ratio));
+      const context = canvas.getContext("2d");
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      context.clearRect(0, 0, bounds.width, bounds.height);
+      if (!result || !image.naturalWidth) return;
+
+      const scale = Math.min(
+        bounds.width / image.naturalWidth,
+        bounds.height / image.naturalHeight,
+      );
+      const offsetX = (bounds.width - image.naturalWidth * scale) / 2;
+      const offsetY = (bounds.height - image.naturalHeight * scale) / 2;
+      const hands = result.gestures || [];
+      const color = result.control_active ? "#34d399" : "#22d3ee";
+      context.lineWidth = 2.5;
+      context.lineCap = "round";
+      context.strokeStyle = color;
+      context.shadowColor = color;
+      context.shadowBlur = 7;
+      for (const hand of hands) {
+        const points = hand.landmarks || [];
+        for (const [startIndex, endIndex] of handConnections) {
+          const start = points[startIndex];
+          const end = points[endIndex];
+          if (!start || !end) continue;
+          context.beginPath();
+          context.moveTo(
+            offsetX + start[0] * image.naturalWidth * scale,
+            offsetY + start[1] * image.naturalHeight * scale,
+          );
+          context.lineTo(
+            offsetX + end[0] * image.naturalWidth * scale,
+            offsetY + end[1] * image.naturalHeight * scale,
+          );
+          context.stroke();
+        }
+        context.shadowBlur = 5;
+        for (const point of points) {
+          context.beginPath();
+          context.arc(
+            offsetX + point[0] * image.naturalWidth * scale,
+            offsetY + point[1] * image.naturalHeight * scale,
+            3,
+            0,
+            Math.PI * 2,
+          );
+          context.fillStyle = color;
+          context.fill();
+        }
+      }
+    }
+
+    function renderHistory(history) {
+      const rows = $("historyRows");
+      rows.replaceChildren();
+      const items = (history || []).slice(-12).reverse();
+      if (!items.length) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 7;
+        cell.className = "empty";
+        cell.textContent = "Chưa có kết quả.";
+        row.appendChild(cell);
+        rows.appendChild(row);
+        return;
+      }
+      for (const snapshot of items) {
+        const result = snapshot.result || {};
+        const row = document.createElement("tr");
+        const values = [
+          new Date(snapshot.received_at * 1000).toLocaleTimeString(),
+          `#${result.frame_id ?? "—"}`,
+          stateLabels[result.control_state]?.[0] || result.control_state || "—",
+          `${Math.round((result.selected_gesture_score || 0) * 100)}%`,
+          (result.gestures || []).map((item) => gestureNames[item.gesture] || item.gesture || "Không rõ").join(", ") || "—",
+          `${result.selected_effect_id || "original"} · ${Number(result.zoom_factor || 1).toFixed(2)}×`,
+          result.last_action || "—",
+        ];
+        for (const value of values) {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.appendChild(cell);
+        }
+        rows.appendChild(row);
+      }
+    }
+
+    function renderFaceOverlays(data, session) {
+      const overlays = Array.isArray(data.face_overlays) ? data.face_overlays : [];
+      const signature = JSON.stringify(overlays);
+      const select = $("faceOverlaySelect");
+      if (signature !== faceOverlayCatalogKey) {
+        faceOverlayCatalogKey = signature;
+        select.replaceChildren(new Option("Không dùng overlay", ""));
+        for (const overlay of overlays) {
+          select.add(new Option(overlay.name, overlay.overlay_id));
+        }
+      }
+
+      const modelAvailable = Boolean(data.face_overlay_model_available);
+      select.disabled = faceOverlayUpdating || !session || !modelAvailable || !overlays.length;
+      if (!faceOverlayUpdating) {
+        select.value = session?.face_overlay_id || "";
+      }
+      if (!modelAvailable) {
+        $("faceOverlayMessage").textContent =
+          data.face_overlay_model_error || "Face Landmarker chưa sẵn sàng.";
+      } else if (!overlays.length) {
+        $("faceOverlayMessage").textContent =
+          "Chưa có sticker. Thêm PNG RGBA và metadata vào assets/photo_effects/face_overlays rồi khởi động lại Server.";
+      } else if (!session) {
+        $("faceOverlayMessage").textContent = "Cần có session hoạt động để chọn sticker.";
+      } else {
+        $("faceOverlayMessage").textContent =
+          "Sticker chỉ ghép vào ảnh chụp, không vẽ lên live preview.";
+      }
+    }
+
+    function clearGallery() {
+      for (const objectUrl of photoObjectUrls.values()) URL.revokeObjectURL(objectUrl);
+      photoObjectUrls.clear();
+      $("photoGallery").replaceChildren();
+    }
+
+    async function refreshGallery() {
+      if (galleryRefreshing) return;
+      const sessionId = currentSession?.session_id || null;
+      if (sessionId !== gallerySessionId) {
+        clearGallery();
+        gallerySessionId = sessionId;
+        lastGalleryRefresh = 0;
+      }
+      if (!sessionId) {
+        $("galleryStatus").textContent = "Chưa có session hoạt động.";
+        return;
+      }
+      if (Date.now() - lastGalleryRefresh < 1000) return;
+
+      galleryRefreshing = true;
+      lastGalleryRefresh = Date.now();
+      try {
+        const photos = await api(
+          `/api/v1/photos?session_id=${encodeURIComponent(sessionId)}`,
+        );
+        const reviewBatchId = currentReview?.batch_id;
+        const reviewPhotos = reviewBatchId
+          ? photos.filter((photo) => photo.capture_batch_id === reviewBatchId)
+          : photos;
+        const recentPhotos = reviewBatchId
+          ? reviewPhotos.sort((first, second) =>
+              (first.sequence_number || 0) - (second.sequence_number || 0),
+            )
+          : reviewPhotos.slice(0, 8);
+        renderPhotoLayoutEditor(latestAdminData, recentPhotos);
+        for (const photo of recentPhotos) {
+          if (photoObjectUrls.has(photo.photo_id)) continue;
+          const headers = {};
+          if (token) headers.Authorization = `Bearer ${token}`;
+          const response = await fetch(
+            `/api/v1/photos/${encodeURIComponent(photo.photo_id)}`,
+            { headers, cache: "no-store" },
+          );
+          if (!response.ok) {
+            throw new Error(`Không tải được ảnh ${photo.photo_id}: HTTP ${response.status}`);
+          }
+          photoObjectUrls.set(photo.photo_id, URL.createObjectURL(await response.blob()));
+        }
+
+        const visibleIds = new Set(recentPhotos.map((photo) => photo.photo_id));
+        for (const [photoId, objectUrl] of photoObjectUrls) {
+          if (!visibleIds.has(photoId)) {
+            URL.revokeObjectURL(objectUrl);
+            photoObjectUrls.delete(photoId);
+          }
+        }
+        const gallery = $("photoGallery");
+        gallery.replaceChildren();
+        if (!recentPhotos.length) {
+          $("galleryStatus").textContent = "Chưa có ảnh trong session. Chụp từ Admin, gesture hoặc nút Pi.";
+          addText(gallery, "empty", "Ảnh chụp mới sẽ xuất hiện ở đây.");
+          return;
+        }
+
+        $("galleryStatus").textContent = reviewBatchId
+          ? `${recentPhotos.length} ảnh của bộ đang được xem trước`
+          : `${recentPhotos.length} ảnh gần nhất · tự làm mới mỗi giây`;
+        for (const photo of recentPhotos) {
+          const card = document.createElement("article");
+          card.className = "photo-card";
+          const link = document.createElement("a");
+          link.href = photoObjectUrls.get(photo.photo_id);
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          const image = document.createElement("img");
+          image.src = photoObjectUrls.get(photo.photo_id);
+          image.alt = `Ảnh chụp ${photo.photo_id}`;
+          link.appendChild(image);
+
+          const info = document.createElement("div");
+          info.className = "photo-card-info";
+          const title = document.createElement("strong");
+          title.textContent = new Date(photo.timestamp * 1000).toLocaleString();
+          const effect = document.createElement("div");
+          effect.textContent = photo.is_raw
+            ? `Ảnh gốc · lượt ${photo.sequence_number || "—"}`
+            : `${photo.effect_id || "original"} · ${Number(photo.zoom_factor || 1).toFixed(2)}×`;
+          const overlay = document.createElement("div");
+          overlay.textContent = photo.face_overlay_applied
+            ? `${photo.face_overlay_id} · ${photo.face_count} khuôn mặt`
+            : photo.face_overlay_id
+              ? `${photo.face_overlay_id} · không tìm thấy khuôn mặt`
+              : "Không dùng overlay";
+          info.append(title, effect, overlay);
+          if (photo.raw_available) {
+            const download = document.createElement("button");
+            download.className = "secondary raw-download";
+            download.textContent = "Tải ảnh gốc";
+            download.addEventListener("click", async () => {
+              const headers = {};
+              if (token) headers.Authorization = `Bearer ${token}`;
+              try {
+                const response = await fetch(
+                  `/api/v1/photos/${encodeURIComponent(photo.photo_id)}/raw`,
+                  { headers, cache: "no-store" },
+                );
+                if (!response.ok) {
+                  throw new Error(`HTTP ${response.status}`);
+                }
+                const url = URL.createObjectURL(await response.blob());
+                const link = document.createElement("a");
+                link.href = url;
+                const disposition = response.headers.get("content-disposition") || "";
+                const filename = /filename="([^"]+)"/i.exec(disposition)?.[1];
+                link.download = filename || `raw_${photo.photo_id}`;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              } catch (error) {
+                $("galleryStatus").textContent = `Không tải được ảnh gốc: ${error.message}`;
+              }
+            });
+            info.appendChild(download);
+          }
+          card.append(link, info);
+          gallery.appendChild(card);
+        }
+      } catch (error) {
+        $("galleryStatus").textContent = `Lỗi tải thư viện ảnh: ${error.message}`;
+      } finally {
+        galleryRefreshing = false;
+      }
+    }
+
+    function renderCaptureSequence(batch, session, mqttConnected, review) {
+      const active = batch && ["countdown", "capturing"].includes(batch.status);
+      $("sequenceStartButton").disabled =
+        !session || !mqttConnected || active || Boolean(review) || sequenceRequesting;
+      $("sequenceCancelButton").disabled = !active || sequenceRequesting;
+      $("captureButton").disabled = !session || active || Boolean(review);
+
+      const statusLabels = {
+        countdown: ["Đang đếm ngược", "warn"],
+        capturing: ["Đang chụp", "warn"],
+        completed: ["Hoàn thành", "good"],
+        failed: ["Thất bại", "bad"],
+        cancelled: ["Đã hủy", ""],
+        interrupted: ["Bị gián đoạn", "bad"],
+      };
+      const [statusText, statusClass] = statusLabels[batch?.status] || ["Chưa chạy", ""];
+      setPill($("sequenceStatus"), statusText, statusClass);
+
+      const progress = $("sequenceProgress");
+      progress.replaceChildren();
+      if (!batch) {
+        $("sequenceMessage").textContent = session
+          ? "Chưa có bộ ảnh nào trong session này."
+          : "Bắt đầu session trên Pi để chụp bộ ảnh.";
+        return;
+      }
+
+      const shots = new Map((batch.shots || []).map((shot) => [shot.shot_number, shot]));
+      const completed = (batch.shots || []).filter((shot) => shot.status === "completed").length;
+      for (let number = 1; number <= batch.target_count; number += 1) {
+        const shot = shots.get(number);
+        const tile = document.createElement("div");
+        const isCurrent = number === batch.current_shot && active;
+        const tileClass = shot?.status === "completed"
+          ? "good"
+          : shot?.status === "failed"
+            ? "bad"
+            : isCurrent
+              ? "warn"
+              : "";
+        tile.className = `sequence-shot ${tileClass}`;
+        const detail = shot?.status === "completed"
+          ? "Đã lưu"
+          : shot?.status === "failed"
+            ? "Lỗi"
+            : isCurrent && batch.status === "countdown"
+              ? "Đếm ngược"
+              : isCurrent && batch.status === "capturing"
+                ? "Đang chụp"
+                : "Chờ";
+        tile.textContent = `Ảnh ${String(number).padStart(2, "0")} · ${detail}`;
+        progress.appendChild(tile);
+      }
+
+      let detail = `${completed}/${batch.target_count} ảnh gốc đã lưu`;
+      if (batch.status === "countdown" && batch.next_shot_at) {
+        const remaining = Math.max(0, Math.ceil(Number(batch.next_shot_at) - Date.now() / 1000));
+        detail += ` · ảnh ${batch.current_shot} sau ${remaining} giây`;
+      } else if (batch.status === "capturing") {
+        detail += ` · đang chờ ảnh ${batch.current_shot} từ Pi`;
+      }
+      if (batch.last_error) detail += ` · ${batch.last_error}`;
+      $("sequenceMessage").textContent = detail;
+    }
+
+    function renderCaptureReview(review, session) {
+      currentReview = review || null;
+      $("galleryTitle").textContent = review
+        ? ["accepted", "timed_out"].includes(review.status)
+          ? "Bộ ảnh đã chốt"
+          : "Xem trước bộ ảnh"
+        : "Ảnh chụp trong session";
+      $("reviewActions").hidden = !review || !session;
+      if (!review || !session) return;
+
+      const pending = review.status === "pending";
+      const retakeInProgress = review.status === "retake_started";
+      $("reviewButtons").hidden = !pending;
+      $("retakeButton").disabled =
+        !pending || review.retake_used || reviewRequesting;
+      $("continueReviewButton").disabled = !pending || reviewRequesting;
+
+      if (pending) {
+        const remaining = Math.max(
+          0,
+          Math.ceil(Number(review.decision_deadline) - Date.now() / 1000),
+        );
+        const retakeText = review.retake_used
+          ? "Bạn đã sử dụng lượt chụp lại."
+          : "Bạn còn tối đa một lượt chụp lại.";
+        $("reviewMessage").textContent =
+          `${retakeText} Tự động chốt bộ ảnh sau ${remaining} giây nếu không chọn.`;
+      } else if (retakeInProgress) {
+        $("reviewMessage").textContent =
+          "Đang chụp lại bộ ảnh. Sau khi hoàn tất, bạn sẽ có thời gian xem trước và chốt bộ ảnh.";
+      } else if (review.status === "timed_out") {
+        $("reviewMessage").textContent =
+          "Đã hết thời gian và tự động chốt bộ ảnh. Hãy chọn 4 ảnh, khung và hiệu ứng bên dưới.";
+      } else {
+        $("reviewMessage").textContent =
+          "Đã chốt bộ ảnh. Hãy chọn 4 ảnh, khung và hiệu ứng bên dưới.";
+      }
+    }
+
+    function renderFps(history) {
+      if (history) {
+        recentFrameTimes = history
+          .map((snapshot) => Number(snapshot.received_at))
+          .filter(Number.isFinite);
+      }
+
+      const latest = recentFrameTimes[recentFrameTimes.length - 1];
+      if (latest == null) {
+        $("fpsValue").textContent = "—";
+        $("fpsNote").textContent = "Chờ nhận frame từ Pi";
+        return;
+      }
+
+      const age = Date.now() / 1000 - latest;
+      if (age > 2) {
+        $("fpsValue").textContent = "0.0";
+        $("fpsNote").textContent = "Không nhận frame mới";
+        return;
+      }
+
+      const samples = recentFrameTimes.filter((timestamp) => timestamp >= latest - 1.5);
+      if (samples.length < 2) {
+        $("fpsValue").textContent = "—";
+        $("fpsNote").textContent = "Đang đo tốc độ xử lý";
+        return;
+      }
+
+      const elapsed = samples[samples.length - 1] - samples[0];
+      const fps = elapsed > 0 ? (samples.length - 1) / elapsed : 0;
+      $("fpsValue").textContent = fps.toFixed(1);
+      $("fpsNote").textContent = "Frame Server xử lý mỗi giây";
+    }
+
+    function renderPhotoLayoutEditor(data, photos) {
+      const section = $("photoLayoutSection");
+      const review = data?.capture_review;
+      const session = data?.active_session;
+      const ready = Boolean(
+        session && review && ["accepted", "timed_out"].includes(review.status),
+      );
+      section.hidden = !ready;
+      if (!ready) {
+        photoLayoutEditorKey = "";
+        return;
+      }
+
+      const rawPhotos = photos
+        .filter((photo) => photo.is_raw && photo.capture_batch_id === review.batch_id)
+        .sort((first, second) => first.sequence_number - second.sequence_number);
+      if (rawPhotos.length < 4) {
+        $("layoutMessage").textContent = "Cần ít nhất 4 ảnh gốc trong bộ đã chốt để chọn khung.";
+        $("savePhotoLayoutButton").disabled = true;
+        return;
+      }
+
+      const editorKey = `${session.session_id}:${review.batch_id}`;
+      if (editorKey === photoLayoutEditorKey) return;
+      photoLayoutEditorKey = editorKey;
+      $("savePhotoLayoutButton").disabled = false;
+      $("layoutMessage").textContent = "Ảnh sẽ được crop vừa từng ô; bản gốc vẫn được giữ nguyên.";
+
+      const templates = data.frame_templates || [];
+      const frameSelect = $("layoutFrameSelect");
+      frameSelect.replaceChildren();
+      for (const template of templates) {
+        frameSelect.add(new Option(template.name, template.frame_id));
+      }
+      const saved = data.photo_layout?.batch_id === review.batch_id
+        ? data.photo_layout
+        : null;
+      const selectedFrame = templates.find(
+        (template) => template.frame_id === saved?.frame_id,
+      ) || templates[0];
+      if (!selectedFrame) {
+        $("layoutMessage").textContent = "Server chưa tải được mẫu khung nào.";
+        $("savePhotoLayoutButton").disabled = true;
+        return;
+      }
+      frameSelect.value = selectedFrame.frame_id;
+      frameSelect.onchange = () => loadFrameTemplatePreview(frameSelect.value);
+      loadFrameTemplatePreview(selectedFrame.frame_id);
+
+      const slotContainer = $("photoLayoutSlots");
+      slotContainer.replaceChildren();
+      const effects = data.effects || [];
+      const overlays = data.face_overlays || [];
+      const firstFour = rawPhotos.slice(0, 4);
+      for (let index = 0; index < 4; index += 1) {
+        const savedSlot = saved?.slots?.[index];
+        const card = document.createElement("article");
+        card.className = "layout-slot";
+        const heading = document.createElement("h3");
+        heading.textContent = `Ô ${index + 1}`;
+
+        const photoSelect = document.createElement("select");
+        photoSelect.className = "layout-photo";
+        photoSelect.setAttribute("aria-label", `Ảnh ở ô ${index + 1}`);
+        for (const photo of rawPhotos) {
+          photoSelect.add(
+            new Option(
+              `Ảnh ${String(photo.sequence_number).padStart(2, "0")}`,
+              photo.photo_id,
+            ),
+          );
+        }
+        photoSelect.value = rawPhotos.some(
+          (photo) => photo.photo_id === savedSlot?.photo_id,
+        ) ? savedSlot.photo_id : firstFour[index].photo_id;
+
+        const effectLabel = document.createElement("label");
+        effectLabel.textContent = "Filter màu";
+        const effectSelect = document.createElement("select");
+        effectSelect.className = "layout-effect";
+        effectSelect.setAttribute("aria-label", `Filter màu ô ${index + 1}`);
+        for (const effect of effects) {
+          effectSelect.add(new Option(effect.name, effect.effect_id));
+        }
+        effectSelect.value = effects.some(
+          (effect) => effect.effect_id === savedSlot?.effect_id,
+        ) ? savedSlot.effect_id : "original";
+
+        const overlayLabel = document.createElement("label");
+        overlayLabel.textContent = "Sticker khuôn mặt";
+        const overlaySelect = document.createElement("select");
+        overlaySelect.className = "layout-overlay";
+        overlaySelect.setAttribute("aria-label", `Sticker khuôn mặt ô ${index + 1}`);
+        overlaySelect.add(new Option("Không dùng sticker", ""));
+        for (const overlay of overlays) {
+          overlaySelect.add(new Option(overlay.name, overlay.overlay_id));
+        }
+        overlaySelect.value = overlays.some(
+          (overlay) => overlay.overlay_id === savedSlot?.face_overlay_id,
+        ) ? savedSlot.face_overlay_id : "";
+        overlaySelect.disabled =
+          !data.face_overlay_model_available || overlays.length === 0;
+
+        const photoLabel = document.createElement("label");
+        photoLabel.textContent = "Ảnh trong ô";
+        card.append(
+          heading,
+          photoLabel,
+          photoSelect,
+          effectLabel,
+          effectSelect,
+          overlayLabel,
+          overlaySelect,
+        );
+        slotContainer.appendChild(card);
+      }
+      $("photoLayoutPreview").hidden = true;
+      if (saved) {
+        $("layoutMessage").textContent = "Đã lưu bố cục trước đó; đang tải ảnh xem trước.";
+        refreshPhotoLayoutPreview(session.session_id);
+      }
+    }
+
+    async function loadFrameTemplatePreview(frameId) {
+      if (!frameId) return;
+      try {
+        const headers = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+        const response = await fetch(
+          `/api/v1/photo-frames/${encodeURIComponent(frameId)}`,
+          { headers, cache: "no-store" },
+        );
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const nextUrl = URL.createObjectURL(await response.blob());
+        if (framePreviewObjectUrl) URL.revokeObjectURL(framePreviewObjectUrl);
+        framePreviewObjectUrl = nextUrl;
+        $("layoutFramePreview").src = nextUrl;
+      } catch (error) {
+        $("layoutMessage").textContent = `Không tải được mẫu khung: ${error.message}`;
+      }
+    }
+
+    async function refreshPhotoLayoutPreview(sessionId) {
+      try {
+        const headers = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+        const response = await fetch(
+          `/api/v1/sessions/${encodeURIComponent(sessionId)}/photo-layout/preview`,
+          { headers, cache: "no-store" },
+        );
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          throw new Error(body.detail || `HTTP ${response.status}`);
+        }
+        const nextUrl = URL.createObjectURL(await response.blob());
+        if (photoLayoutPreviewObjectUrl) {
+          URL.revokeObjectURL(photoLayoutPreviewObjectUrl);
+        }
+        photoLayoutPreviewObjectUrl = nextUrl;
+        $("photoLayoutPreview").src = nextUrl;
+        $("photoLayoutPreview").hidden = false;
+        return true;
+      } catch (error) {
+        $("layoutMessage").textContent = `Không tạo được ảnh xem trước: ${error.message}`;
+        return false;
+      }
+    }
+
+    function render(data) {
+      latestAdminData = data;
+      const health = data.health || {};
+      $("serverStatus").textContent = health.status === "ok" ? "Hoạt động" : "Cần kiểm tra";
+      $("serverUptime").textContent = `Uptime ${Math.floor(health.uptime_sec || 0)} giây`;
+      $("aiStatus").textContent = health.ai_available ? "Sẵn sàng" : "Không khả dụng";
+      $("mqttStatus").textContent = health.mqtt_connected ? "Đã kết nối" : "Mất kết nối";
+      $("deviceCount").textContent = String(health.connected_devices ?? 0);
+      renderFps(data.result_history || []);
+
+      const session = data.active_session;
+      currentSession = session;
+      renderFaceOverlays(data, session);
+      renderCaptureReview(data.capture_review, session);
+      const sequenceConfig = data.capture_sequence_config || {};
+      $("sequenceTitle").textContent =
+        `Chụp liên hoàn ${sequenceConfig.photo_count || 8} ảnh`;
+      $("sequenceDescription").textContent =
+        `Server đếm ngược ${sequenceConfig.countdown_sec || 10} giây trước mỗi ảnh và lưu ảnh gốc riêng.`;
+      $("sessionInfo").textContent = session
+        ? `Session ${session.session_id.slice(0, 8)} · ${session.effect_id || "original"} · ${Number(session.zoom_factor || 1).toFixed(2)}×`
+        : "Chưa có session hoạt động";
+      setPill($("sessionStatus"), session ? "ACTIVE" : "NO SESSION", session ? "good" : "");
+      renderCaptureSequence(
+        data.capture_sequence,
+        session,
+        Boolean(health.mqtt_connected),
+        data.capture_review,
+      );
+
+      const snapshot = data.latest_result;
+      const result = snapshot && snapshot.result;
+      latestGestureResult = result;
+      const resultKey = result ? `${result.session_id}:${result.frame_id}` : null;
+      const newResult = resultKey !== lastRenderedResultKey;
+      if (newResult) {
+        renderHistory(data.result_history);
+        lastRenderedResultKey = resultKey;
+      }
+
+      $("deviceNote").textContent = snapshot
+        ? `Frame mới lúc ${new Date(snapshot.received_at * 1000).toLocaleTimeString()}`
+        : "Chưa nhận frame từ thiết bị";
+      if (!result) {
+        if (!newResult) return;
+        $("frameInfo").textContent = "Chưa nhận frame";
+        setPill($("poseStatus"), "Đang chờ Pi", "");
+        $("poseScore").innerHTML = "—<small>%</small>";
+        $("scoreBar").style.width = "0%";
+        $("readyState").textContent = "Đang chờ kết quả gesture";
+        $("keypointCount").textContent = "—";
+        $("handCount").textContent = "—";
+        $("processingTime").textContent = "—";
+        $("feedback").replaceChildren(addText(document.createElement("div"), "empty", "Giơ bàn tay mở để bật điều khiển."));
+        $("gestures").replaceChildren(addText(document.createElement("div"), "empty", "Chưa có dữ liệu."));
+        $("keypoints").replaceChildren();
+        $("videoCaption").textContent = "Đang chờ kết quả nhận diện…";
+        drawHandOverlay(null);
+        return;
+      }
+      if (!newResult) return;
+
+      $("frameInfo").textContent = `Session ${result.session_id.slice(0, 8)} · Frame #${result.frame_id}`;
+      const [statusText, statusClass] = stateLabels[result.control_state] || [result.control_state, ""];
+      setPill($("poseStatus"), statusText, statusClass);
+      const score = Math.max(0, Math.min(100, Math.round((Number(result.selected_gesture_score) || 0) * 100)));
+      const effectName = (data.effects || []).find((item) => item.effect_id === result.selected_effect_id)?.name || result.selected_effect_id;
+      $("videoCaption").textContent = [
+        statusText,
+        result.selected_gesture ? `${gestureNames[result.selected_gesture] || result.selected_gesture} ${score}%` : "",
+        result.control_state === "countdown" ? `Chụp sau ${result.countdown_remaining}` : "",
+        `Filter: ${effectName}`,
+        `Zoom ${Number(result.zoom_factor || 1).toFixed(2)}×`,
+      ].filter(Boolean).join(" · ");
+      $("cameraImage").style.transform = `scale(${Number(result.zoom_factor || 1)})`;
+      $("poseOverlay").style.transform = `scale(${Number(result.zoom_factor || 1)})`;
+      $("poseScore").innerHTML = `${score}<small>%</small>`;
+      $("scoreBar").style.width = `${score}%`;
+      $("readyState").textContent = result.last_action || "Đang theo dõi cử chỉ";
+      $("readyState").style.color = result.control_active ? "#6ee7b7" : "#94a3b8";
+      $("keypointCount").textContent = result.selected_gesture
+        ? (gestureNames[result.selected_gesture] || result.selected_gesture)
+        : "—";
+      $("handCount").textContent = String(result.hand_count || 0);
+      $("processingTime").textContent = Number(result.processing_ms || 0).toFixed(1);
+
+      const feedback = $("feedback");
+      feedback.replaceChildren();
+      addText(feedback, "feedback-item", result.last_action || "Đang chờ cử chỉ");
+      if (result.control_state === "countdown")
+        addText(feedback, "feedback-item", `Chụp sau ${result.countdown_remaining} giây · nắm tay để hủy`);
+
+      const gestures = $("gestures");
+      gestures.replaceChildren();
+      if (result.gestures?.length) {
+        for (const item of result.gestures) {
+          const name = gestureNames[item.gesture] || item.gesture || "Không xác định";
+          const confidence = item.score == null ? "" : ` · ${(item.score * 100).toFixed(0)}%`;
+          addText(gestures, "feedback-item", `${item.handedness || "Tay"}: ${name}${confidence}`);
+        }
+      } else {
+        addText(gestures, "empty", "Chưa nhận diện gesture.");
+      }
+
+      const keypoints = $("keypoints");
+      keypoints.replaceChildren();
+      const selectedHand = (result.gestures || []).find(
+        (item) => item.gesture === result.selected_gesture,
+      );
+      $("keypointSummary").textContent = `Chi tiết landmarks bàn tay (${selectedHand?.landmarks?.length || 0})`;
+      for (const [index, point] of (selectedHand?.landmarks || []).entries()) {
+        const row = document.createElement("div");
+        row.className = "point";
+        const name = document.createElement("span");
+        name.textContent = `Landmark ${index}`;
+        const coords = document.createElement("span");
+        coords.textContent = `x ${Number(point[0]).toFixed(2)}, y ${Number(point[1]).toFixed(2)}`;
+        row.append(name, coords);
+        keypoints.appendChild(row);
+      }
+
+      const notice = $("templateNotice");
+      notice.hidden = false;
+      notice.textContent = "Open_Palm bật điều khiển · Thumb_Up chụp · Victory filter kế · Pointing_Up filter trước · Closed_Fist hủy đếm ngược · Pinch để zoom.";
+    }
+
+    async function refresh() {
+      if (refreshing) return;
+      refreshing = true;
+      try {
+        const query = new URLSearchParams({ device_id: deviceId });
+        const data = await api(`/api/v1/admin/state?${query}`);
+        render(data);
+        await updateCameraFrame(data.latest_result?.result || null);
+        await refreshGallery();
+        setConnection("Đang cập nhật", "good");
+      } catch (error) {
+        renderFps();
+        setConnection(error.message, "bad");
+      } finally {
+        refreshing = false;
+      }
+    }
+
+    $("connectButton").addEventListener("click", async () => {
+      token = $("token").value.trim();
+      deviceId = $("deviceId").value.trim() || "pi01";
+      if (pollTimer) clearInterval(pollTimer);
+      await refresh();
+      pollTimer = setInterval(refresh, 200);
+    });
+
+    $("brightness").addEventListener("input", (event) => {
+      $("brightnessValue").textContent = `${event.target.value}%`;
+    });
+
+    $("ledButton").addEventListener("click", async () => {
+      try {
+        const result = await api(`/api/v1/devices/${encodeURIComponent(deviceId)}/led`, {
+          method: "POST",
+          body: JSON.stringify({ brightness: Number($("brightness").value) }),
+        });
+        $("ledMessage").textContent = `Lệnh đã gửi · ${result.command_id}`;
+      } catch (error) {
+        $("ledMessage").textContent = `Không gửi được lệnh: ${error.message}`;
+      }
+    });
+
+    $("captureButton").addEventListener("click", async () => {
+      if (!currentSession || $("captureButton").disabled) return;
+      try {
+        const result = await api(`/api/v1/sessions/${encodeURIComponent(currentSession.session_id)}/capture`, {
+          method: "POST",
+        });
+        $("captureMessage").textContent = `Lệnh chụp đã gửi · ${result.command_id}`;
+      } catch (error) {
+        $("captureMessage").textContent = `Không gửi được lệnh: ${error.message}`;
+      }
+    });
+
+    $("sequenceStartButton").addEventListener("click", async () => {
+      if (!currentSession || sequenceRequesting) return;
+      sequenceRequesting = true;
+      $("sequenceStartButton").disabled = true;
+      try {
+        await api(
+          `/api/v1/sessions/${encodeURIComponent(currentSession.session_id)}/capture-sequence`,
+          { method: "POST" },
+        );
+        $("sequenceMessage").textContent = "Đã bắt đầu chụp bộ ảnh.";
+      } catch (error) {
+        $("sequenceMessage").textContent = `Không bắt đầu được: ${error.message}`;
+      } finally {
+        sequenceRequesting = false;
+        await refresh();
+      }
+    });
+
+    $("sequenceCancelButton").addEventListener("click", async () => {
+      if (!currentSession || sequenceRequesting) return;
+      sequenceRequesting = true;
+      $("sequenceCancelButton").disabled = true;
+      try {
+        await api(
+          `/api/v1/sessions/${encodeURIComponent(currentSession.session_id)}/capture-sequence/cancel`,
+          { method: "POST" },
+        );
+        $("sequenceMessage").textContent = "Đã yêu cầu hủy bộ chụp.";
+      } catch (error) {
+        $("sequenceMessage").textContent = `Không hủy được: ${error.message}`;
+      } finally {
+        sequenceRequesting = false;
+        await refresh();
+      }
+    });
+
+    $("retakeButton").addEventListener("click", async () => {
+      if (!currentSession || !currentReview || reviewRequesting) return;
+      reviewRequesting = true;
+      $("retakeButton").disabled = true;
+      try {
+        await api(
+          `/api/v1/sessions/${encodeURIComponent(currentSession.session_id)}/capture-sequence/retake`,
+          { method: "POST" },
+        );
+        $("reviewMessage").textContent = "Đã bắt đầu lượt chụp lại.";
+      } catch (error) {
+        $("reviewMessage").textContent = `Không bắt đầu được: ${error.message}`;
+      } finally {
+        reviewRequesting = false;
+        await refresh();
+      }
+    });
+
+    $("continueReviewButton").addEventListener("click", async () => {
+      if (!currentSession || !currentReview || reviewRequesting) return;
+      reviewRequesting = true;
+      $("continueReviewButton").disabled = true;
+      try {
+        await api(
+          `/api/v1/sessions/${encodeURIComponent(currentSession.session_id)}/capture-review/continue`,
+          { method: "POST" },
+        );
+      } catch (error) {
+        $("reviewMessage").textContent = `Không chốt được bộ ảnh: ${error.message}`;
+      } finally {
+        reviewRequesting = false;
+        await refresh();
+      }
+    });
+
+    $("savePhotoLayoutButton").addEventListener("click", async () => {
+      if (!currentSession || !currentReview || photoLayoutRequesting) return;
+      const slots = [...$("photoLayoutSlots").querySelectorAll(".layout-slot")];
+      const payload = {
+        frame_id: $("layoutFrameSelect").value,
+        slots: slots.map((slot) => ({
+          photo_id: slot.querySelector(".layout-photo").value,
+          effect_id: slot.querySelector(".layout-effect").value,
+          face_overlay_id: slot.querySelector(".layout-overlay").value || null,
+        })),
+      };
+      if (new Set(payload.slots.map((slot) => slot.photo_id)).size !== 4) {
+        $("layoutMessage").textContent = "Hãy chọn 4 ảnh khác nhau cho 4 ô.";
+        return;
+      }
+
+      photoLayoutRequesting = true;
+      $("savePhotoLayoutButton").disabled = true;
+      $("layoutMessage").textContent = "Đang lưu lựa chọn và ghép ảnh xem trước…";
+      try {
+        await api(
+          `/api/v1/sessions/${encodeURIComponent(currentSession.session_id)}/photo-layout`,
+          { method: "PUT", body: JSON.stringify(payload) },
+        );
+        const previewed = await refreshPhotoLayoutPreview(currentSession.session_id);
+        if (previewed) {
+          $("layoutMessage").textContent =
+            "Đã tạo ảnh xem trước. Ảnh gốc vẫn được giữ nguyên; chưa có file xuất hoặc QR.";
+        }
+      } catch (error) {
+        $("layoutMessage").textContent = `Không lưu được bố cục: ${error.message}`;
+      } finally {
+        photoLayoutRequesting = false;
+        $("savePhotoLayoutButton").disabled = false;
+      }
+    });
+
+    $("faceOverlaySelect").addEventListener("change", async (event) => {
+      if (!currentSession || faceOverlayUpdating) return;
+      const sessionId = currentSession.session_id;
+      const previousOverlayId = currentSession.face_overlay_id || "";
+      faceOverlayUpdating = true;
+      $("faceOverlaySelect").disabled = true;
+      try {
+        const updated = await api(
+          `/api/v1/sessions/${encodeURIComponent(sessionId)}/face-overlay`,
+          {
+            method: "PUT",
+            body: JSON.stringify({ overlay_id: event.target.value || null }),
+          },
+        );
+        currentSession = updated;
+        $("faceOverlayMessage").textContent = updated.face_overlay_id
+          ? `Đã chọn overlay: ${updated.face_overlay_id}`
+          : "Đã tắt overlay.";
+      } catch (error) {
+        $("faceOverlaySelect").value = previousOverlayId;
+        $("faceOverlayMessage").textContent = `Không đổi được overlay: ${error.message}`;
+      } finally {
+        faceOverlayUpdating = false;
+        await refresh();
+      }
+    });
+
+    window.addEventListener("resize", () => drawHandOverlay(latestGestureResult));
+  </script>
+</body>
+</html>

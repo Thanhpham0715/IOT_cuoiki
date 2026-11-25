@@ -1,0 +1,15 @@
+{
+  "id": "glasses",
+  "name": "Kính râm Aviator",
+  "anchor": "eyes",
+  "width_ratio": 1.48,
+  "pivot": [
+    0.5,
+    0.42
+  ],
+  "offset": [
+    0.0,
+    0.02
+  ],
+  "angle_offset": 0.0
+}

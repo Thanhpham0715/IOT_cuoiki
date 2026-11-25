@@ -1,0 +1,5 @@
+numpy
+opencv-python
+mediapipe
+# Chi can neu muon nhan nguoi + chon controller (bo qua neu chay --no-yolo)
+ultralytics

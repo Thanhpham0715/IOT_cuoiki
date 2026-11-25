@@ -1,0 +1,31 @@
+# AI Smart Photobooth 2.0
+# =======================
+# Chạy trên: Raspberry Pi 4 (client IoT) + PC (AI Server)
+# Phát triển: SSH vào PC, code chung cây thư mục này.
+
+[project]
+name = "photobooth-server"
+version = "0.2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26,<2",
+    "pydantic>=2.6,<3",
+    "PyYAML>=6,<7",
+]
+
+[project.optional-dependencies]
+server = [
+    "fastapi>=0.110,<1",
+    "uvicorn[standard]>=0.27,<1",
+    "paho-mqtt>=2.1,<3",
+    "opencv-python-headless>=4.8,<5",
+    "mediapipe>=0.10.18,<0.11",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["shared*", "server*"]
+
+[tool.setuptools.package-data]
+server = ["static/*.html"]
+

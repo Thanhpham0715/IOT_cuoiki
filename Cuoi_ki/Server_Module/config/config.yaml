@@ -1,0 +1,71 @@
+# config/config.yaml
+# ==================
+# MỌI THÔNG SỐ CẤU HÌNH ĐỀU Ở ĐÂY — không hardcode trong code.
+# Khi demo đổi mạng: chỉ sửa file này.
+
+server:
+  host: "0.0.0.0"
+  client_host: "127.0.0.1"    # Set to the laptop's LAN IPv4 address on the Pi
+  http_port: 8000
+  ws_path: "/ws/frames"
+  max_frame_bytes: 10485760
+  static_token: ""            # Set PHOTOBOOTH_STATIC_TOKEN for non-local networks
+
+mqtt:
+  broker_host: "127.0.0.1"
+  broker_port: 1883
+  device_id: "pi01"
+  username: ""
+  password: ""
+  tls_enabled: false
+  tls_ca_certs: null
+  heartbeat_interval_sec: 5
+  telemetry_interval_sec: 2
+  qos_telemetry: 0
+  qos_command: 1
+  qos_status: 1
+
+light_control:
+  enabled: false
+  lux_low: 150
+  lux_high: 300
+  hysteresis: 30
+  min_cmd_interval_sec: 2.0
+  default_brightness: 50
+
+gesture:
+  model_path: "../../AI/models/gesture_recognizer.task"
+  num_hands: 1
+  min_score: 0.6
+  activation_min_score: 0.5
+  hold_frames: 4
+  cooldown_sec: 0.8
+  release_frames: 5
+  countdown_sec: 3
+  min_hand_presence_confidence: 0.4
+  min_tracking_confidence: 0.4
+
+face_effects:
+  model_path: "../../AI/models/face_landmarker.task"
+  asset_dir: "assets/photo_effects/face_overlays"
+  num_faces: 5
+  min_face_detection_confidence: 0.5
+  min_face_presence_confidence: 0.5
+  min_tracking_confidence: 0.5
+
+capture_sequence:
+  photo_count: 8
+  countdown_sec: 10
+  shot_timeout_sec: 60
+  retake_decision_timeout_sec: 30
+
+effects:
+  default_effect_id: "original"
+
+storage:
+  photo_dir: "data/photos"
+  offline_photo_dir: "data/offline_photos"
+  db_path: "data/photobooth.db"
+  log_dir: "data/logs"
+  telemetry_retention_days: 7
+

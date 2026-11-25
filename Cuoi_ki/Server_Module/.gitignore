@@ -1,0 +1,25 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+
+# Dữ liệu runtime — không commit
+data/photos/
+data/offline_photos/
+data/logs/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# File tạm từ công cụ đọc docx
+read_docx.py
+docx_content.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+

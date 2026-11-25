@@ -1,0 +1,59 @@
+# config/config.yaml
+# ==================
+# MỌI THÔNG SỐ CẤU HÌNH ĐỀU Ở ĐÂY — không hardcode trong code.
+# Khi demo đổi mạng: chỉ sửa file này.
+
+server:
+  host: "0.0.0.0"
+  client_host: "10.228.70.213"
+  http_port: 8000
+  ws_path: "/ws/frames"
+  max_frame_bytes: 10485760
+  static_token: ""            # Set PHOTOBOOTH_STATIC_TOKEN for non-local networks
+
+mqtt:
+  broker_host: "10.228.70.213"
+  broker_port: 1883
+  device_id: "pi01"
+  username: ""
+  password: ""
+  tls_enabled: false
+  tls_ca_certs: null
+  heartbeat_interval_sec: 5
+  telemetry_interval_sec: 2
+  qos_telemetry: 0
+  qos_command: 1
+  qos_status: 1
+
+camera:
+  width: 480
+  height: 360
+  jpeg_quality: 60
+  target_fps: 12
+  device_index: 0
+  photo_width: 1920
+  photo_height: 1080
+  photo_jpeg_quality: 90
+  mock_hardware: false
+  led_gpio_pin: 18
+  button_gpio_pin: 17  # Wire the button between BCM GPIO17 and GND
+  light_sensor_address: null
+
+light_control:
+  enabled: false
+  lux_low: 150
+  lux_high: 300
+  hysteresis: 30
+  min_cmd_interval_sec: 2.0
+  default_brightness: 50
+
+effects:
+  default_effect_id: "original"
+
+storage:
+  photo_dir: "data/photos"
+  offline_photo_dir: "data/offline_photos"
+  db_path: "data/photobooth.db"
+  log_dir: "data/logs"
+  telemetry_retention_days: 7
+

@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: photobooth-server
+Version: 0.2.0
+Requires-Python: >=3.10
+Requires-Dist: numpy<2,>=1.26
+Requires-Dist: pydantic<3,>=2.6
+Requires-Dist: PyYAML<7,>=6
+Provides-Extra: server
+Requires-Dist: fastapi<1,>=0.110; extra == "server"
+Requires-Dist: uvicorn[standard]<1,>=0.27; extra == "server"
+Requires-Dist: paho-mqtt<3,>=2.1; extra == "server"
+Requires-Dist: opencv-python-headless<5,>=4.8; extra == "server"
+Requires-Dist: mediapipe<0.11,>=0.10.18; extra == "server"
+Requires-Dist: ultralytics<9,>=8.3; extra == "server"
